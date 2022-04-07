@@ -69,7 +69,8 @@ public class Server extends Observable {
     public void bidOnGame(int bidPrice, String gameName, String userEmail) {
         for (Game g : games) {
             if (g.getGameName().equalsIgnoreCase(gameName)) {
-                g.makeBid(bidPrice, userEmail);
+                //pass instance of the server so we can call update if best bid chanegs
+                g.makeBid(bidPrice, userEmail , this);
             }
 
         }
@@ -91,7 +92,11 @@ public class Server extends Observable {
     public void makeOfferForGame(int offerPrice, String gameName, String userEmail) {
         for (Game g : games) {
             if (g.getGameName().equalsIgnoreCase(gameName)) {
-                g.makeOffer(offerPrice, userEmail);
+                 //pass instance of the server so we can call update if best bid chanegs
+                g.makeOffer(offerPrice, userEmail , this);
+            }else {
+                //need to output the game name not found
+                //not here but need a boolean flag to see if found 
             }
 
         }
@@ -106,6 +111,24 @@ public class Server extends Observable {
         }
 
         return "order book not found";
+    }
+    
+    public void cancleUsersBid(String gameName , String userEmail){
+        for(Game g : games ){
+            if(g.getGameName().equalsIgnoreCase(gameName)){
+                //found gamme
+                g.cancleUsersBid(userEmail);
+            }
+        }
+    }
+    
+     public void cancleUsersOffer(String gameName , String userEmail){
+        for(Game g : games ){
+            if(g.getGameName().equalsIgnoreCase(gameName)){
+                //found gamme
+                g.cancleUsersOffer(userEmail);
+            }
+        }
     }
 
     public void deleteGame(String gameName) {

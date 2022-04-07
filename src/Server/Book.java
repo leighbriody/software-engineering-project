@@ -46,10 +46,18 @@ public class Book {
         //return the order books bids and offers so we can display to server.
     }
 
+    public void cancleUsersBid(String userEmail){
+        this.mapBids.remove(userEmail);
+    }
+    
+    public void cancleUsersOffer(String userEmail){
+        this.mapOffers.remove(userEmail);
+    }
+    
     public String displayOrderBook(String gameName) {
         //Set output string
        
-        String output = "-- Order Book For Game : " + gameName + "--" +  "\n" + "BIDS OFFERS";
+        String output = "\n" +  "-- Order Book For Game : " + gameName + "--" +  "\n" + "BIDS" +  "\t" + "OFFERS";
 
         //cast the bids and offers to integer arrays
         Set<String> bidsKeySet = this.mapBids.keySet();
@@ -83,8 +91,8 @@ public class Book {
             }
 
             //ammend the output
-            output += "\n" + currentBid + " " + currentOffer;
-             output += "\n" + "------------------";
+            output += "\n" + currentBid +  "\t" + currentOffer;
+             
         }
         return output;
     }

@@ -85,6 +85,7 @@ public class Connection extends Thread implements Observer {
 
         //intstance of the server
         Server theServer = (Server) c.o;
+        String response = "";
 
         //split the choice up into a character array
         //last element of array will always be the username
@@ -118,28 +119,52 @@ public class Connection extends Thread implements Observer {
                 int offerPrice = Integer.parseInt(choices[1]);
                 String gameName = choices[2].trim();
                 String userEmail = choices[choices.length - 1];
-                //make the bid
-                theServer.makeOfferForGame(offerPrice, gameName, userEmail);
-                //output message
-                int bestOffer = theServer.getGamesBestOffer(gameName);
-                output.println((String) "You have made an offer of " + offerPrice + " for the game " + gameName + "the best offer for this is now" + bestOffer);
-                output.flush();
+
+                //if price is 0 we want to cancle 
+                if (offerPrice == 0) {
+                    //cancle
+                    theServer.cancleUsersOffer(gameName, userEmail);
+                    response = "You have cancled your offer for the game " + gameName;
+                } else {
+                    //make offer
+                    //make the bid
+                    theServer.makeOfferForGame(offerPrice, gameName, userEmail);
+                    response = "You have made an offer of " + offerPrice + " for the game name " + gameName;
+                }
+
+                output.println((String) "You have made an offer of " + offerPrice + " for the game " + gameName);
                 
+                //also need to send out the list of games again and maybe functionailty ? 
+                output.flush();
+
                 //want to to display order book to the log
                 System.out.println(theServer.getGamesOrderBook(gameName));
                 break;
             case "B":
-                //bid details
+
+                //Set bid details
                 int bidPrice = Integer.parseInt(choices[1]);
-                String gameNameBid = choices[3];
+                String gameNameBid = choices[2];
                 String userEmailOffer = choices[choices.length - 1];
-                //make the bid
-                theServer.bidOnGame(bidPrice, gameNameBid, userEmailOffer);
-                //output message
-                output.println((String) "Here is a list of all games " + "\n" + "-----------------" + "\n" + theServer.getGames().toString() + "\n" + "-------------"
-                        + "\n" + "Enter 'B (price) (gamename) to make a bid on the game"
-                        + "\n" + "Enter 'O (price) (gamename) to make a offer on the game");
+
+                // if the price is 0 we want to cancel bid
+                if (bidPrice == 0) {
+                    //cancle
+                    theServer.cancleUsersBid(gameNameBid, userEmailOffer);
+                    //set response
+                    response = "You have cancled your bid for the game " + gameNameBid;
+                } else {
+                    //Make bid
+                    theServer.bidOnGame(bidPrice, gameNameBid, userEmailOffer);
+                    response = "You have made a bid of " + bidPrice + " for the game " + gameNameBid;
+                }
+
+                //output message to client
+                output.println((String) response);
                 output.flush();
+
+                //display the order book to the server
+                System.out.println(theServer.getGamesOrderBook(gameNameBid));
                 break;
 
         }
