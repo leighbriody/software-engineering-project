@@ -6,6 +6,8 @@
 package Server;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  *
@@ -31,34 +33,40 @@ public class Game {
         return gameName;
     }
 
-    public ArrayList<Integer> getAllBids() {
+    public Map<String, Integer> getAllBids() {
         return orderBook.getBids();
     }
 
-    public ArrayList<Integer> getAllOffers() {
+    public Map<String, Integer> getAllOffers() {
         return orderBook.getOffers();
     }
 
-    public void makeBid(int bidPrice , String userEmail) {
-     
-        //if it is the best bid
-            //
-        //if its not the best bid 
-            //kept in a book
-        this.orderBook.makeBid(bidPrice ,userEmail);
-    }
+    public void makeBid(int bidPrice, String userEmail) {
 
-    public void makeOffer(int offerPrice , String userEmail) {
-
-        if(this.bestOffer < offerPrice){
-            this.bestOffer = offerPrice;
-        }else {
-              this.orderBook.makeOffer(offerPrice , userEmail);
+        if (this.bestBid < bidPrice) {
+            this.bestBid = bidPrice;
+            this.orderBook.makeBid(bidPrice, userEmail);
+        } else {
+            this.orderBook.makeBid(bidPrice, userEmail);
         }
-      
+
     }
 
-    public void displayOrderBook() {
+    public void makeOffer(int offerPrice, String userEmail) {
+
+        //if the best offer changes we set best offer
+        if (this.bestOffer < offerPrice) {
+            this.bestOffer = offerPrice;
+            this.orderBook.makeOffer(offerPrice, userEmail);
+        } else {
+            this.orderBook.makeOffer(offerPrice, userEmail);
+        }
+
+    }
+
+    public String displayOrderBook(String gameName) {
+
+        return this.orderBook.displayOrderBook(gameName);
 
     }
 

@@ -101,9 +101,16 @@ public class Connection extends Thread implements Observer {
                 output.flush();
                 break;
             case "listgames":
-                output.println((String) "Here is a list of all games " + "\n" + "-----------------" + "\n" + theServer.getGames().toString() + "\n" + "-------------"
-                        + "\n" + "Enter 'B (price) (gamename) to make a bid on the game"
-                        + "\n" + "Enter 'O (price) (gamename) to make a offer on the game");
+
+                String allGamesDisplayString = "Here is a list of all the games " + "\n";
+
+                for (Game g : theServer.getGames()) {
+                    allGamesDisplayString += g.toString() + "\n";
+                }
+                allGamesDisplayString += "\n" + "Enter 'B (price) (gamename) to make a bid on the game"
+                        + "\n" + "Enter 'O (price) (gamename) to make a offer on the game";
+
+                output.println((String) allGamesDisplayString);
                 output.flush();
                 break;
             case "O":
@@ -114,9 +121,12 @@ public class Connection extends Thread implements Observer {
                 //make the bid
                 theServer.makeOfferForGame(offerPrice, gameName, userEmail);
                 //output message
-               int bestOffer =  theServer.getGamesBestOffer(gameName);
+                int bestOffer = theServer.getGamesBestOffer(gameName);
                 output.println((String) "You have made an offer of " + offerPrice + " for the game " + gameName + "the best offer for this is now" + bestOffer);
                 output.flush();
+                
+                //want to to display order book to the log
+                System.out.println(theServer.getGamesOrderBook(gameName));
                 break;
             case "B":
                 //bid details

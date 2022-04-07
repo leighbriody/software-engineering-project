@@ -20,6 +20,7 @@ import java.util.regex.Pattern;
  */
 public class Client {
 
+    //07/04/22
     private static int allClientsId;
     private static int id;
     private boolean loggedIn = false;
