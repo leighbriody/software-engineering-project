@@ -26,6 +26,7 @@ public class Game {
     public Game(String gameName) {
         this.gameName = gameName;
         this.orderBook = new Book();
+        this.bestOffer = -1;
     }
 
     //getters and setters
@@ -41,34 +42,27 @@ public class Game {
         return orderBook.getOffers();
     }
 
-    public void makeBid(int bidPrice, String userEmail , Server theServer) {
-
+    public void makeBid(int bidPrice, String userEmail, Server theServer) {
         if (this.bestBid < bidPrice) {
             this.bestBid = bidPrice;
             this.orderBook.makeBid(bidPrice, userEmail);
             //update observers
+            //if best bid >= best offer
+            //best bid and offer removed
+            //x checkBidOfferMacth();
             theServer.notifyObservers("The best bid for the game " + this.gameName + " has now changed to " + this.bestBid);
         } else {
             this.orderBook.makeBid(bidPrice, userEmail);
         }
-
     }
     
-  
-    public void cancleUsersBid(String userEmail){
-        //need to remove the bid from the array
-        this.orderBook.cancleUsersBid(userEmail);
-    }
-    
-    public void cancleUsersOffer(String userEmail){
-        //need to remove the bid from the array
-        this.orderBook.cancleUsersOffer(userEmail);
-    }
-
-    public void makeOffer(int offerPrice, String userEmail , Server theServer) {
-
+      public void makeOffer(int offerPrice, String userEmail, Server theServer) {
         //if the best offer changes we set best offer
-        if (this.bestOffer < offerPrice) {
+        
+        //if best off == null we set it
+       
+        
+        if (this.bestOffer > offerPrice || this.bestOffer == -1) {
             this.bestOffer = offerPrice;
             this.orderBook.makeOffer(offerPrice, userEmail);
             //update obsevrers of best price
@@ -76,8 +70,23 @@ public class Game {
         } else {
             this.orderBook.makeOffer(offerPrice, userEmail);
         }
+    }
+
+    public void checkBidOfferMacth() {
 
     }
+
+    public void cancleUsersBid(String userEmail) {
+        //need to remove the bid from the array
+        this.orderBook.cancleUsersBid(userEmail);
+    }
+
+    public void cancleUsersOffer(String userEmail) {
+        //need to remove the bid from the array
+        this.orderBook.cancleUsersOffer(userEmail);
+    }
+
+  
 
     public String displayOrderBook(String gameName) {
 

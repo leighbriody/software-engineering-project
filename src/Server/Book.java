@@ -28,16 +28,43 @@ public class Book {
     //constructor
     public Book() {
 
-        //map
+        //Bids needs to be sorted ascending
         this.mapBids = new HashMap<String, Integer>();
+
+        //offers needs to be sorted descending
         this.mapOffers = new HashMap<String, Integer>();
     }
 
     //getters and setters
     public void makeBid(int price, String userEmail) {
         this.mapBids.put(userEmail, price);
+        
+        //returns the best bid
+        //get best bid
+    
 
-        //return the order book as a string maybe ? 
+    }
+
+    public void makeTrade() {
+
+        //this is when the best bid matches the best offer
+        //we want to make the trade
+        Map.Entry<String, Integer> entry = mapBids.entrySet().iterator().next();
+        String bidUser = entry.getKey();
+        Integer bidValue = entry.getValue();
+
+        //Offers
+        Map.Entry<String, Integer> entry2 = mapOffers.entrySet().iterator().next();
+        String offerUser = entry2.getKey();
+        Integer offerValue = entry2.getValue();
+
+        //check 
+        if (bidValue >= offerValue) {
+            //then we want to remove the best bid and offer
+            this.mapBids.remove(bidUser);
+            this.mapOffers.remove(offerUser);
+        }
+
     }
 
     public void makeOffer(int price, String userEmail) {
@@ -46,18 +73,18 @@ public class Book {
         //return the order books bids and offers so we can display to server.
     }
 
-    public void cancleUsersBid(String userEmail){
+    public void cancleUsersBid(String userEmail) {
         this.mapBids.remove(userEmail);
     }
-    
-    public void cancleUsersOffer(String userEmail){
+
+    public void cancleUsersOffer(String userEmail) {
         this.mapOffers.remove(userEmail);
     }
-    
+
     public String displayOrderBook(String gameName) {
         //Set output string
-       
-        String output = "\n" +  "-- Order Book For Game : " + gameName + "--" +  "\n" + "BIDS" +  "\t" + "OFFERS";
+
+        String output = "\n" + "-- Order Book For Game : " + gameName + "--" + "\n" + "BIDS" + "\t" + "OFFERS";
 
         //cast the bids and offers to integer arrays
         Set<String> bidsKeySet = this.mapBids.keySet();
@@ -91,8 +118,8 @@ public class Book {
             }
 
             //ammend the output
-            output += "\n" + currentBid +  "\t" + currentOffer;
-             
+            output += "\n" + currentBid + "\t" + currentOffer;
+
         }
         return output;
     }

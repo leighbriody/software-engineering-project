@@ -116,7 +116,7 @@ public class Connection extends Thread implements Observer {
                 break;
             case "O":
                 //bid details
-                int offerPrice = Integer.parseInt(choices[1]);
+                int offerPrice = Integer.parseInt(choices[1].trim());
                 String gameName = choices[2].trim();
                 String userEmail = choices[choices.length - 1];
 
@@ -132,8 +132,8 @@ public class Connection extends Thread implements Observer {
                     response = "You have made an offer of " + offerPrice + " for the game name " + gameName;
                 }
 
-                output.println((String) "You have made an offer of " + offerPrice + " for the game " + gameName);
-                
+                output.println((String) response);
+
                 //also need to send out the list of games again and maybe functionailty ? 
                 output.flush();
 

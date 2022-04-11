@@ -20,8 +20,15 @@ public class Server extends Observable {
 
     //Possibly need to change to dynamic array
     private static ArrayList<Game> games;
+    
+    
 
+    
+    // private static DyamicGameArray allGames = new DyamicGameArray();
     public static void main(String[] args) {
+        // allGames.addGame(new Game("fifa"));
+        // allGames.addGame(new Game("spiderman"));
+        //games = ainitGames();
         games = ainitGames();
         new Server();
 
@@ -70,11 +77,9 @@ public class Server extends Observable {
         for (Game g : games) {
             if (g.getGameName().equalsIgnoreCase(gameName)) {
                 //pass instance of the server so we can call update if best bid chanegs
-                g.makeBid(bidPrice, userEmail , this);
+                g.makeBid(bidPrice, userEmail, this);
             }
-
         }
-
     }
 
     public int getGamesBestOffer(String gameName) {
@@ -83,22 +88,19 @@ public class Server extends Observable {
             if (g.getGameName().equalsIgnoreCase(gameName.trim())) {
                 bestOffer = g.getBestOffer();
             }
-
         }
         return bestOffer;
-
     }
 
     public void makeOfferForGame(int offerPrice, String gameName, String userEmail) {
         for (Game g : games) {
             if (g.getGameName().equalsIgnoreCase(gameName)) {
-                 //pass instance of the server so we can call update if best bid chanegs
-                g.makeOffer(offerPrice, userEmail , this);
-            }else {
+                //pass instance of the server so we can call update if best bid chanegs
+                g.makeOffer(offerPrice, userEmail, this);
+            } else {
                 //need to output the game name not found
                 //not here but need a boolean flag to see if found 
             }
-
         }
 
     }
@@ -112,19 +114,19 @@ public class Server extends Observable {
 
         return "order book not found";
     }
-    
-    public void cancleUsersBid(String gameName , String userEmail){
-        for(Game g : games ){
-            if(g.getGameName().equalsIgnoreCase(gameName)){
+
+    public void cancleUsersBid(String gameName, String userEmail) {
+        for (Game g : games) {
+            if (g.getGameName().equalsIgnoreCase(gameName)) {
                 //found gamme
                 g.cancleUsersBid(userEmail);
             }
         }
     }
-    
-     public void cancleUsersOffer(String gameName , String userEmail){
-        for(Game g : games ){
-            if(g.getGameName().equalsIgnoreCase(gameName)){
+
+    public void cancleUsersOffer(String gameName, String userEmail) {
+        for (Game g : games) {
+            if (g.getGameName().equalsIgnoreCase(gameName)) {
                 //found gamme
                 g.cancleUsersOffer(userEmail);
             }

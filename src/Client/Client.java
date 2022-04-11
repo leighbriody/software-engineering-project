@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
  * @author Leigh Briody
  */
 public class Client {
-
+    
     //07/04/22
     private static int allClientsId;
     private static int id;
