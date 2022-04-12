@@ -19,15 +19,15 @@ import java.util.regex.Pattern;
  * @author Leigh Briody
  */
 public class Client {
-    
-    //07/04/22
+
+    //Set our variables
     private static int allClientsId;
     private static int id;
     private boolean loggedIn = false;
     private String userEmail = "";
 
     public static void main(String[] args) {
-
+        //create new instance of client
         new Client();
     }
 
@@ -47,20 +47,19 @@ public class Client {
             Scanner keyboard = new Scanner(System.in);
             String message = "";
 
-            //display the welcome message
-            // like before, except pass the input stream to another thread to print out incoming messages
+            //get response and start thread so we can keep listening
             Response resp = new Response(input);
             resp.start();
 
             while (!message.equals(".")) {
-                //if user is logged in
+                //if user is logged in  we can proceed with extra functionailty , until then display login loopp
                 if (this.loggedIn) {
-
                     message = keyboard.nextLine();
                     // Exchange messages with provider
                     output.println(message + " " + this.userEmail);
                     output.flush();
                 } else {
+                    //display login and wait till logged in
                     displayLogin();
                     System.out.println("Enter email to login");
                     message = keyboard.nextLine();
@@ -69,7 +68,6 @@ public class Client {
                         output.println("loggedin");
                         output.flush();
                     }
-
                 }
             }
             resp.stopResponse();
@@ -80,14 +78,15 @@ public class Client {
         }
     }
 
+    //This will display the login message to the user
     public static void displayLogin() {
         System.out.println("Welcome to leighs video game store");
         System.out.println("-- Enter your email below to login -- ");
 
     }
 
+    //Thos will handle the validation of a correct email string
     public boolean handleLogin(String email) {
-
         boolean acceptedEmail = false;
         //check if its a valid email and if so login and set logged in to true
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."

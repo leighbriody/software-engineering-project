@@ -18,45 +18,35 @@ import java.util.Observable;
  */
 public class Server extends Observable {
 
-    //Possibly need to change to dynamic array
-    private static ArrayList<Game> games;
-    
-    
+    //Hold all games within the server on a dynamic array
+    private static DyamicGameArray games = new DyamicGameArray();
 
-    
-    // private static DyamicGameArray allGames = new DyamicGameArray();
     public static void main(String[] args) {
-        // allGames.addGame(new Game("fifa"));
-        // allGames.addGame(new Game("spiderman"));
-        //games = ainitGames();
-        games = ainitGames();
+     
+        //add 2 games to the server (add more in the future)
+        games.addGame(new Game("fifa"));
+        games.addGame(new Game("call-of-duty"));
+
+        //create instance of the server
         new Server();
-
-    }
-
-    @Override
-    public void notifyObservers(Object arg) {
-        setChanged();
-        super.notifyObservers(arg);
     }
 
     public Server() {
         try {
-
-            // allGames.add(cod);
-            // allGames.add(battlefield);
-            // Step 1) Set up a connection socket for other programs to connect to
+            //Set up a connection socket for other programs to connect to
             ServerSocket listeningSocket = new ServerSocket(Details.LISTENING_PORT);
 
             boolean continueRunning = true;
 
             while (continueRunning) {
-                // Step 2) wait for incoming connection and build communications link
+                
+                //Listen for incoming connection and build data socket
                 Socket dataSocket = listeningSocket.accept();
 
-                // create a new connection, pass it socket and then register it with this instance
+                // Create connection and add obsrver as we want this connection (client) to listen
                 Connection c = new Connection(dataSocket, this);
                 addObserver(c);
+                
                 // start the thread
                 Thread t = new Thread(c);
                 t.start();
@@ -69,81 +59,46 @@ public class Server extends Observable {
         }
     }
 
-    public ArrayList<Game> getGames() {
-        return games;
+    //Returns all the games on the server as a string
+    public String getListOfGames() {
+        return games.getAllGamesAsString();
     }
 
+    //Allows a user to bid on a game
     public void bidOnGame(int bidPrice, String gameName, String userEmail) {
-        for (Game g : games) {
-            if (g.getGameName().equalsIgnoreCase(gameName)) {
-                //pass instance of the server so we can call update if best bid chanegs
-                g.makeBid(bidPrice, userEmail, this);
-            }
-        }
+        games.bidOnGame(bidPrice, gameName, userEmail, this);
     }
 
+    //Gets the current best offer for a game
     public int getGamesBestOffer(String gameName) {
-        int bestOffer = -1;
-        for (Game g : games) {
-            if (g.getGameName().equalsIgnoreCase(gameName.trim())) {
-                bestOffer = g.getBestOffer();
-            }
-        }
-        return bestOffer;
+        return games.getGamesBestOffer(gameName);
     }
 
+    //Allows a user to make an offer for a game
     public void makeOfferForGame(int offerPrice, String gameName, String userEmail) {
-        for (Game g : games) {
-            if (g.getGameName().equalsIgnoreCase(gameName)) {
-                //pass instance of the server so we can call update if best bid chanegs
-                g.makeOffer(offerPrice, userEmail, this);
-            } else {
-                //need to output the game name not found
-                //not here but need a boolean flag to see if found 
-            }
-        }
-
+        games.makeOfferForGame(offerPrice, gameName, userEmail, this);
     }
 
+    //Gets a games order book as a string
     public String getGamesOrderBook(String gameName) {
-        for (Game g : games) {
-            if (g.getGameName().trim().equalsIgnoreCase(gameName)) {
-                return g.displayOrderBook(g.getGameName());
-            }
-        }
-
-        return "order book not found";
+        return games.getGamesOrderBook(gameName);
     }
 
+    //Allows a user to cancle their bid 
     public void cancleUsersBid(String gameName, String userEmail) {
-        for (Game g : games) {
-            if (g.getGameName().equalsIgnoreCase(gameName)) {
-                //found gamme
-                g.cancleUsersBid(userEmail);
-            }
-        }
+        games.cancleUsersBid(gameName, userEmail);
     }
 
+    //allows a user to cancle their offer
     public void cancleUsersOffer(String gameName, String userEmail) {
-        for (Game g : games) {
-            if (g.getGameName().equalsIgnoreCase(gameName)) {
-                //found gamme
-                g.cancleUsersOffer(userEmail);
-            }
-        }
+        games.cancleUsersOffer(gameName, userEmail);
     }
 
-    public void deleteGame(String gameName) {
-        games.remove(0);
-
-    }
-
-    public static ArrayList<Game> ainitGames() {
-        ArrayList<Game> allGames = new ArrayList<>();
-        allGames.add(new Game("fifa"));
-        allGames.add(new Game("call-of-duty"));
-        allGames.add(new Game("spider-man"));
-        return allGames;
+    //Notify observers (clients) of changes
+       @Override
+    public void notifyObservers(Object arg) {
+        setChanged();
+        super.notifyObservers(arg);
     }
 
 }

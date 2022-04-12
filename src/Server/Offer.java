@@ -9,24 +9,23 @@ package Server;
  *
  * @author Leigh Briody
  */
-public class Bid {
+public class Offer {
 
-    //set variables
     private int price;
     private String username;
 
-    
-    public Bid(int price, String username) {
+    public Offer(int price, String username) {
         this.price = price;
         this.username = username;
     }
 
-    Bid() {
+    Offer() {
         this.price = 0;
         this.username = "";
     }
+    
+    //getters and setters
 
-    //getters and setters 
     public int getPrice() {
         return price;
     }
@@ -42,10 +41,13 @@ public class Bid {
     public void setUsername(String username) {
         this.username = username;
     }
+    
+    //to string
 
     @Override
     public String toString() {
-        return "Bid{" + "price=" + price + ", username=" + username + '}';
+        return "Offer{" + "price=" + price + ", username=" + username + '}';
     }
-
+    
+    
 }

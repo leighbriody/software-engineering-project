@@ -23,7 +23,7 @@ import java.util.Scanner;
  */
 public class Connection extends Thread implements Observer {
 
-    //add init 
+    //Create our variables
     private PrintWriter output;
     private Scanner input;
     private Socket dataSocket;
@@ -55,13 +55,12 @@ public class Connection extends Thread implements Observer {
                 inp = input.nextLine();
                 System.out.println("Received: " + inp);
 
-                //we need top 
-                //if input == listgamesoutput true
-                //should probably put a switch statement here
+                //pass input and output to handle input method which deals with logic
                 handleInput(inp, this.o, this.output, this);
 
                 //  o.notifyObservers(inp);
             }
+            //remove observer when user wants to exit and enters "."
             o.deleteObserver(this);
             dataSocket.close();
 
@@ -92,7 +91,9 @@ public class Connection extends Thread implements Observer {
         //[B , 100 , GAME , username] OR [O , 100 , GAME , username]
         String[] choices = inp.split(" ");
 
+        
         switch (choices[0].trim()) {
+            //User wishes to login
             case "loggedin":
                 output.println((String) "Hello and welcome to leighs video game store"
                         + "\n" + "-----------------"
@@ -101,19 +102,20 @@ public class Connection extends Thread implements Observer {
 
                 output.flush();
                 break;
+            //User wishes to see the list of games
             case "listgames":
 
                 String allGamesDisplayString = "Here is a list of all the games " + "\n";
 
-                for (Game g : theServer.getGames()) {
-                    allGamesDisplayString += g.toString() + "\n";
-                }
+                String allGames = theServer.getListOfGames();
+                allGamesDisplayString += allGames;
                 allGamesDisplayString += "\n" + "Enter 'B (price) (gamename) to make a bid on the game"
                         + "\n" + "Enter 'O (price) (gamename) to make a offer on the game";
 
                 output.println((String) allGamesDisplayString);
                 output.flush();
                 break;
+            //User wishes to make an order
             case "O":
                 //bid details
                 int offerPrice = Integer.parseInt(choices[1].trim());
@@ -140,6 +142,7 @@ public class Connection extends Thread implements Observer {
                 //want to to display order book to the log
                 System.out.println(theServer.getGamesOrderBook(gameName));
                 break;
+            //user wishes to make a bid
             case "B":
 
                 //Set bid details

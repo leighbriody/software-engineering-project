@@ -18,85 +18,73 @@ import java.util.Set;
  */
 public class Book {
 
-    //Fields which will hold all the bids and offers
-    //private ArrayList<Integer> bids;
-    // private ArrayList<Integer> offers;
-    //key value , key is user and value is bid
-    private Map<String, Integer> mapBids;
-    private Map<String, Integer> mapOffers;
+    //Hold all bids and offers within a dynamic array
+    private DynamicBidsArray2 mapBids;
+    private DynamicOffersArray2 mapOffers;
 
-    //constructor
     public Book() {
-
-        //Bids needs to be sorted ascending
-        this.mapBids = new HashMap<String, Integer>();
-
-        //offers needs to be sorted descending
-        this.mapOffers = new HashMap<String, Integer>();
+        //Init these dynamic array when book object is init
+        this.mapBids = new DynamicBidsArray2();
+        this.mapOffers = new DynamicOffersArray2();
     }
 
-    //getters and setters
+  
+
+    public void makeTrade(String gameName, Server theServer) {
+
+        //gets the bid at the top of map bids 
+        //removes it 
+        //notifys obsevrer
+        Bid bidderMatched = this.mapBids.getElement(0);
+        Offer offerMatched = this.mapOffers.getElement(0);
+
+        //remove both elements
+        this.mapBids.remove(0);
+        this.mapOffers.remove(0);
+
+        //notify them
+        theServer.notifyObservers("A trade has been made for the game " + gameName);
+
+    }
+
+      //Adds a bid object to the dynamic array
     public void makeBid(int price, String userEmail) {
-        this.mapBids.put(userEmail, price);
-        
-        //returns the best bid
-        //get best bid
+        this.mapBids.addElement(new Bid(price, userEmail));
+
+        //
+    }
     
-
-    }
-
-    public void makeTrade() {
-
-        //this is when the best bid matches the best offer
-        //we want to make the trade
-        Map.Entry<String, Integer> entry = mapBids.entrySet().iterator().next();
-        String bidUser = entry.getKey();
-        Integer bidValue = entry.getValue();
-
-        //Offers
-        Map.Entry<String, Integer> entry2 = mapOffers.entrySet().iterator().next();
-        String offerUser = entry2.getKey();
-        Integer offerValue = entry2.getValue();
-
-        //check 
-        if (bidValue >= offerValue) {
-            //then we want to remove the best bid and offer
-            this.mapBids.remove(bidUser);
-            this.mapOffers.remove(offerUser);
-        }
-
-    }
-
+    //Adds an offer object to the dynamic offers
     public void makeOffer(int price, String userEmail) {
-        this.mapOffers.put(userEmail, price);
-
-        //return the order books bids and offers so we can display to server.
+        this.mapOffers.addElement(new Offer(price, userEmail));
     }
 
+    //allows a user to cancle their bid (removes it from array)
     public void cancleUsersBid(String userEmail) {
-        this.mapBids.remove(userEmail);
+        this.mapBids.cancleUserBid(userEmail);
     }
 
+    //allows user to cancle their offer(removes it from array)
     public void cancleUsersOffer(String userEmail) {
-        this.mapOffers.remove(userEmail);
+        this.mapOffers.cancleUserOffer(userEmail);
     }
 
+    public int getCurrentBestBid() {
+        return mapBids.getCurrentBestBid();
+    }
+
+    public int getCurrentBestOffer() {
+        return mapOffers.getCurrentBestOffer();
+    }
+
+    //Will return the games order book as a formatted string
     public String displayOrderBook(String gameName) {
         //Set output string
-
         String output = "\n" + "-- Order Book For Game : " + gameName + "--" + "\n" + "BIDS" + "\t" + "OFFERS";
 
-        //cast the bids and offers to integer arrays
-        Set<String> bidsKeySet = this.mapBids.keySet();
-        Set<String> offers = this.mapOffers.keySet();
-
         // Creating an ArrayList of values
-        Collection<Integer> offerValues = this.mapOffers.values();
-        Collection<Integer> bidValues = this.mapBids.values();
-
-        // Creating an ArrayList of values
-        ArrayList<Integer> bidsArrayList = new ArrayList<>(bidValues);
-        ArrayList<Integer> offersArrayList = new ArrayList<>(offerValues);
+        ArrayList<Integer> offersArrayList = this.mapOffers.getAllOfferValues();
+        ArrayList<Integer> bidsArrayList = this.mapBids.getAllBidValues();
 
         //get the max value
         int MAX = Math.max(bidsArrayList.size(), offersArrayList.size());
@@ -122,15 +110,6 @@ public class Book {
 
         }
         return output;
-    }
-
-    //get
-    public Map<String, Integer> getBids() {
-        return mapBids;
-    }
-
-    public Map<String, Integer> getOffers() {
-        return mapOffers;
     }
 
 }
