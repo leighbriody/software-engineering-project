@@ -28,32 +28,34 @@ public class Book {
         this.mapOffers = new DynamicOffersArray2();
     }
 
-  
-
     public void makeTrade(String gameName, Server theServer) {
 
-        //gets the bid at the top of map bids 
-        //removes it 
-        //notifys obsevrer
+        // System.out.println(this.mapOffers);
         Bid bidderMatched = this.mapBids.getElement(0);
-        Offer offerMatched = this.mapOffers.getElement(0);
+        Offer offerMatched = this.mapOffers.getElement(this.mapOffers.getBestOfferIndex());
 
         //remove both elements
         this.mapBids.remove(0);
-        this.mapOffers.remove(0);
+        this.mapOffers.removeValue(this.mapOffers.getBestOfferIndex());
+
+        //add two new null elements
+        this.mapBids.addElement(new Bid(0, null));
+        this.mapOffers.addElement(new Offer(0, null));
 
         //notify them
-        theServer.notifyObservers("A trade has been made for the game " + gameName);
+        theServer.notifyObservers("test " + bidderMatched.getUsername());
+         theServer.notifyObservers(offerMatched.getUsername());
+        theServer.notifyObservers("A trade has been made for the game " + gameName + "The buyer : " + bidderMatched.getUsername() + " and the seller :" + offerMatched.getUsername());
 
     }
 
-      //Adds a bid object to the dynamic array
+    //Adds a bid object to the dynamic array
     public void makeBid(int price, String userEmail) {
         this.mapBids.addElement(new Bid(price, userEmail));
 
         //
     }
-    
+
     //Adds an offer object to the dynamic offers
     public void makeOffer(int price, String userEmail) {
         this.mapOffers.addElement(new Offer(price, userEmail));

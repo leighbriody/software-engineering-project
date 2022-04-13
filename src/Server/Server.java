@@ -76,7 +76,7 @@ public class Server extends Observable {
 
     //Allows a user to make an offer for a game
     public void makeOfferForGame(int offerPrice, String gameName, String userEmail) {
-        games.makeOfferForGame(offerPrice, gameName, userEmail, this);
+            games.makeOfferForGame(offerPrice, gameName, userEmail, this);
     }
 
     //Gets a games order book as a string
@@ -100,5 +100,9 @@ public class Server extends Observable {
         setChanged();
         super.notifyObservers(arg);
     }
+    
+    
+    
+   
 
 }

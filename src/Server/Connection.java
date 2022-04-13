@@ -70,6 +70,7 @@ public class Connection extends Thread implements Observer {
     }
 
     // called by notifyObservers, write arg to this connection
+    /*
     @Override
     public void update(Observable o, Object arg) {
         System.out.println("Update...");
@@ -79,7 +80,18 @@ public class Connection extends Thread implements Observer {
             System.out.println("Sending " + arg);
         }
     }
-
+*/
+    
+    
+      @Override
+    public void update(Observable o, Object arg) {
+        System.out.println("Update...");
+        if (arg instanceof String) {
+            output.println((String) arg);
+            output.flush();
+            System.out.println("Sending " + arg);
+        }
+    }
     public static void handleInput(String inp, Observable o, PrintWriter output, Connection c) {
 
         //intstance of the server

@@ -23,7 +23,7 @@ public class DynamicBidsArray2 {
 
     // default constructor to initialize the array and values
     public DynamicBidsArray2() {
-        array = new Bid[2];
+        array = new Bid[4];
         size = 0;
         capacity = 2;
         populateNullValues();
@@ -167,7 +167,7 @@ public class DynamicBidsArray2 {
             size--;
         }
 
-        sortArray();
+        //sortArray(); needed ? 
     }
 
     /* method to increase the capacity, if necessary, to ensure it can hold at least the 

@@ -21,10 +21,23 @@ public class DynamicOffersArray2 {
 
     // default constructor to initialize the array and values
     public DynamicOffersArray2() {
-        array = new Offer[2];
+        array = new Offer[4];
         size = 0;
         capacity = 2;
         populateNullValues();
+    }
+    
+    public int getBestOfferIndex(){
+        
+       //want to loop trough the offers arrray and get the first occurance that is not null or == 0
+       for(int i =0 ; i < array.length ; i ++){
+           if(array[i].getPrice() != 0 && array[i].getUsername() != null){
+               //we found first occurance so return
+               return i;
+           }
+       }
+      
+       return -1;
     }
 
     // to add an element at the end
@@ -51,6 +64,10 @@ public class DynamicOffersArray2 {
         //sort array
         populateNullValues();
         sortArray();
+    }
+    
+    public int getArrayLength(){
+        return this.array.length;
     }
 
     public void cancleUserOffer(String userEmail) {
@@ -156,6 +173,11 @@ public class DynamicOffersArray2 {
     }
 
     // to remove an element at a particular index
+    
+    public void removeValue(int index){
+        array[index] = new Offer(0 , null);
+        size --;
+    }
     public void remove(int index) {
         if (index >= size || index < 0) {
             System.out.println("No element at this index");

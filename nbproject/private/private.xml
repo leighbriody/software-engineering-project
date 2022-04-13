@@ -6,8 +6,12 @@
             <file>file:/C:/SoftwareEngineeringProject/src/Client/TestApp.java</file>
             <file>file:/C:/SoftwareEngineeringProject/src/Client/Client.java</file>
             <file>file:/C:/SoftwareEngineeringProject/src/Server/Server.java</file>
+            <file>file:/C:/SoftwareEngineeringProject/src/Server/Offer.java</file>
             <file>file:/C:/SoftwareEngineeringProject/src/Server/DynamicOffersArray2.java</file>
             <file>file:/C:/SoftwareEngineeringProject/src/Server/Book.java</file>
+            <file>file:/C:/SoftwareEngineeringProject/src/Server/DynamicBidsArray2.java</file>
+            <file>file:/C:/SoftwareEngineeringProject/src/Server/Game.java</file>
+            <file>file:/C:/SoftwareEngineeringProject/src/Server/DyamicGameArray.java</file>
         </group>
     </open-files>
 </project-private>

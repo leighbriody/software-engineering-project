@@ -49,8 +49,14 @@ public class Game {
 
             //check if trade is made  
             this.bestBid = bidPrice;
-            theServer.notifyObservers("The best bid for the game " + this.gameName + " has now changed to " + this.bestBid);
+             theServer.notifyObservers("The best bid for the game " + this.gameName + " has now changed to " + this.bestBid);
             this.orderBook.makeBid(bidPrice, userEmail);
+           
+           if(isTradeViable()){
+               this.orderBook.makeTrade(gameName, theServer);
+           }
+            
+            
 
         } else {
             this.orderBook.makeBid(bidPrice, userEmail);
