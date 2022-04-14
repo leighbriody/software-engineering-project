@@ -21,23 +21,23 @@ public class DynamicOffersArray2 {
 
     // default constructor to initialize the array and values
     public DynamicOffersArray2() {
-        array = new Offer[4];
+        array = new Offer[2];
         size = 0;
         capacity = 2;
         populateNullValues();
     }
-    
-    public int getBestOfferIndex(){
-        
-       //want to loop trough the offers arrray and get the first occurance that is not null or == 0
-       for(int i =0 ; i < array.length ; i ++){
-           if(array[i].getPrice() != 0 && array[i].getUsername() != null){
-               //we found first occurance so return
-               return i;
-           }
-       }
-      
-       return -1;
+
+    public int getBestOfferIndex() {
+
+        //want to loop trough the offers arrray and get the first occurance that is not null or == 0
+        for (int i = 0; i < array.length; i++) {
+            if (array[i].getPrice() != 0 && array[i].getUsername() != null) {
+                //we found first occurance so return
+                return i;
+            }
+        }
+
+        return -1;
     }
 
     // to add an element at the end
@@ -54,9 +54,6 @@ public class DynamicOffersArray2 {
             changeUsersOfer(element);
         } else {
 
-           
-
-           
             array[0] = element;
             size++;
         }
@@ -65,9 +62,24 @@ public class DynamicOffersArray2 {
         populateNullValues();
         sortArray();
     }
-    
-    public int getArrayLength(){
+
+    public int getArrayLength() {
         return this.array.length;
+    }
+
+    public boolean hasUserOfferForGame(String username) {
+
+        boolean hasUserOffer = false;
+        for (Offer o : array) {
+            try {
+                if (o.getUsername().equalsIgnoreCase(username)) {
+                    hasUserOffer = true;
+                }
+            } catch (Exception e) {
+
+            }
+        }
+        return hasUserOffer;
     }
 
     public void cancleUserOffer(String userEmail) {
@@ -75,7 +87,7 @@ public class DynamicOffersArray2 {
         for (int i = 0; i < array.length; i++) {
             try {
                 if (array[i].getUsername().equalsIgnoreCase(userEmail)) {
-                    this.remove(i);
+                    array[i] = new Offer(0 , "undefined");
                 }
             } catch (Exception e) {
                 //ignore
@@ -95,7 +107,7 @@ public class DynamicOffersArray2 {
     }
 
     public int getCurrentBestOffer() {
-        return array[0].getPrice();
+        return array[array.length - 1].getPrice();
     }
 
     public ArrayList<Integer> getAllOfferValues() {
@@ -173,11 +185,11 @@ public class DynamicOffersArray2 {
     }
 
     // to remove an element at a particular index
-    
-    public void removeValue(int index){
-        array[index] = new Offer(0 , null);
-        size --;
+    public void removeValue(int index) {
+        array[index] = new Offer(0, null);
+        size--;
     }
+
     public void remove(int index) {
         if (index >= size || index < 0) {
             System.out.println("No element at this index");
@@ -206,9 +218,9 @@ public class DynamicOffersArray2 {
         }
         array = temp;
         capacity = capacity * minCapacity;
-        
+
         //sort arrat 
-         sortArray();
+        sortArray();
     }
 
     /*

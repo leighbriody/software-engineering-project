@@ -40,6 +40,14 @@ public class Game {
         return gameName;
     }
 
+    public boolean hasUserAlreadyOffered(String username) {
+        return this.orderBook.hasUserAlreadyOffered(username);
+    }
+
+    public boolean hasUserAlreadyBidded(String username) {
+        return this.orderBook.hasUserAlreadyBidded(username);
+    }
+
     public void makeBid(int bidPrice, String userEmail, Server theServer) {
 
         //each time someone makes a bid or an offer we need to check if the best bid is the same or greater than the offer ? 
@@ -47,16 +55,23 @@ public class Game {
         //getCurrentBestBid will return the current best bid
         if (this.bestBid < bidPrice) {
 
+            changeBestBid(bidPrice, theServer);
+
             //check if trade is made  
-            this.bestBid = bidPrice;
-             theServer.notifyObservers("The best bid for the game " + this.gameName + " has now changed to " + this.bestBid);
             this.orderBook.makeBid(bidPrice, userEmail);
-           
-           if(isTradeViable()){
-               this.orderBook.makeTrade(gameName, theServer);
-           }
-            
-            
+
+            if (isTradeViable()) {
+                this.orderBook.makeTrade(gameName, theServer, this.bestBid, this.bestOffer);
+
+                //then need to ger current best offer and best bid and set it
+                int newBestOffer = this.orderBook.getCurrentBestOffer();
+                int newBestBid = this.orderBook.getCurrentBestBid();
+
+                //change
+                changeBestBid(newBestBid, theServer);
+                changeBestOffer(newBestOffer, theServer);
+
+            }
 
         } else {
             this.orderBook.makeBid(bidPrice, userEmail);
@@ -66,10 +81,14 @@ public class Game {
     public void makeOffer(int offerPrice, String userEmail, Server theServer) {
         //each time someone makes a bid or an offer we need to check if the best bid is the same or greater than the offer ?  
         if (this.bestOffer > offerPrice || this.bestOffer == -1) {
-            this.bestOffer = offerPrice;
-            theServer.notifyObservers("The best offer for the game " + this.gameName + " has now changed to " + offerPrice);
+
+            changeBestOffer(offerPrice, theServer);
+
             this.orderBook.makeOffer(offerPrice, userEmail);
             //update obsevrers of best price
+            if (isTradeViable()) {
+                this.orderBook.makeTrade(gameName, theServer, this.bestBid, this.bestOffer);
+            }
 
         } else {
             this.orderBook.makeOffer(offerPrice, userEmail);
@@ -115,6 +134,16 @@ public class Game {
 
     public int getBestOffer() {
         return bestOffer;
+    }
+
+    public void changeBestBid(int newBestBid, Server theServer) {
+        this.bestBid = newBestBid;
+        theServer.notifyObservers("The best bid for the game " + this.gameName + " has now changed to " + this.bestBid);
+    }
+
+    public void changeBestOffer(int newBestOffer, Server theServer) {
+        this.bestOffer = newBestOffer;
+        theServer.notifyObservers("The best offer for the game " + this.gameName + " has now changed to " + this.bestOffer);
     }
 
     public void setBestOffer(int bestOffer) {

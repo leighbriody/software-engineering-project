@@ -12,30 +12,50 @@ import java.util.Scanner;
  * @author Leigh Briody
  */
 public class Response extends Thread {
-    
+
     private Scanner input;
     private volatile boolean stop = false;
+    private static String username;
 
-    public Response(Scanner s)
-    {
+    public Response(Scanner s, String username) {
         input = s;
+        this.username = username;
     }
 
     @Override
-    public void run()
-    {
+    public void run() {
         String response = "";
-        while (!stop)
-        {
+        while (!stop) {
             response = input.nextLine();
-           // System.out.println("Response: " + response);
-            System.out.println(response);
+            handleResponse(response);
 
         }
 
     }
-    
+
     public synchronized void stopResponse() {
         stop = true;
     }
+
+    public static void handleResponse(String response) {
+
+        //If response contains sucessfully bought and their username we can display ot to them as they are the user
+        if (response.contains("you have successfully purchased")) {
+            //get username at substring ssee if it contains users username
+            String buyerEmail = response.substring(0, response.indexOf(" "));
+            if (buyerEmail.equalsIgnoreCase(username)) {
+                System.out.println(response);
+            }
+        } else if (response.contains("you have successfully sold")) {
+            //get username at substring ssee if it contains users username
+            String sellerEmail = response.substring(0, response.indexOf(" "));
+            if (sellerEmail.equalsIgnoreCase(username)) {
+                System.out.println(response);
+            }
+        } else {
+            System.out.println(response);
+        }
+
+    }
+
 }

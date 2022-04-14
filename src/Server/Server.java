@@ -22,7 +22,7 @@ public class Server extends Observable {
     private static DyamicGameArray games = new DyamicGameArray();
 
     public static void main(String[] args) {
-     
+
         //add 2 games to the server (add more in the future)
         games.addGame(new Game("fifa"));
         games.addGame(new Game("call-of-duty"));
@@ -39,14 +39,14 @@ public class Server extends Observable {
             boolean continueRunning = true;
 
             while (continueRunning) {
-                
+
                 //Listen for incoming connection and build data socket
                 Socket dataSocket = listeningSocket.accept();
 
                 // Create connection and add obsrver as we want this connection (client) to listen
                 Connection c = new Connection(dataSocket, this);
                 addObserver(c);
-                
+
                 // start the thread
                 Thread t = new Thread(c);
                 t.start();
@@ -64,19 +64,27 @@ public class Server extends Observable {
         return games.getAllGamesAsString();
     }
 
-    //Allows a user to bid on a game
-    public void bidOnGame(int bidPrice, String gameName, String userEmail) {
-        games.bidOnGame(bidPrice, gameName, userEmail, this);
-    }
-
     //Gets the current best offer for a game
     public int getGamesBestOffer(String gameName) {
         return games.getGamesBestOffer(gameName);
+
+    }
+
+    //Allows a user to bid on a game
+    public void bidOnGame(int bidPrice, String gameName, String userEmail) {
+        if (!games.hasUserAlreadyOffered(gameName, userEmail)) {
+            games.bidOnGame(bidPrice, gameName, userEmail, this);
+        }
+
     }
 
     //Allows a user to make an offer for a game
     public void makeOfferForGame(int offerPrice, String gameName, String userEmail) {
+
+        if (!games.hasUserAlreadyBidded(gameName, userEmail)) {
             games.makeOfferForGame(offerPrice, gameName, userEmail, this);
+        }
+
     }
 
     //Gets a games order book as a string
@@ -95,14 +103,11 @@ public class Server extends Observable {
     }
 
     //Notify observers (clients) of changes
-       @Override
+    @Override
     public void notifyObservers(Object arg) {
         setChanged();
         super.notifyObservers(arg);
+
     }
-    
-    
-    
-   
 
 }

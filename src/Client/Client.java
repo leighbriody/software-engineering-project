@@ -20,9 +20,6 @@ import java.util.regex.Pattern;
  */
 public class Client {
 
-    //Set our variables
-    private static int allClientsId;
-    private static int id;
     private boolean loggedIn = false;
     private String userEmail = "";
 
@@ -47,8 +44,21 @@ public class Client {
             Scanner keyboard = new Scanner(System.in);
             String message = "";
 
+            //need to get the users username
+            while (!loggedIn) {
+                //display login and wait till logged in
+                displayLogin();
+                System.out.println("Enter email to login");
+                message = keyboard.nextLine();
+                if (handleLogin(message)) {
+                    //let the server know we have logged in
+                    output.println("loggedin");
+                    output.flush();
+                }
+            }
+
             //get response and start thread so we can keep listening
-            Response resp = new Response(input);
+            Response resp = new Response(input,this.userEmail);
             resp.start();
 
             while (!message.equals(".")) {
@@ -58,16 +68,6 @@ public class Client {
                     // Exchange messages with provider
                     output.println(message + " " + this.userEmail);
                     output.flush();
-                } else {
-                    //display login and wait till logged in
-                    displayLogin();
-                    System.out.println("Enter email to login");
-                    message = keyboard.nextLine();
-                    if (handleLogin(message)) {
-                        //let the server know we have logged in
-                        output.println("loggedin");
-                        output.flush();
-                    }
                 }
             }
             resp.stopResponse();

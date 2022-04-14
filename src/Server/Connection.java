@@ -69,41 +69,32 @@ public class Connection extends Thread implements Observer {
         }
     }
 
-    // called by notifyObservers, write arg to this connection
-    /*
     @Override
     public void update(Observable o, Object arg) {
         System.out.println("Update...");
         if (arg instanceof String) {
             output.println((String) arg);
             output.flush();
-            System.out.println("Sending " + arg);
+            System.out.println("Sending " + arg + o.toString());
         }
     }
-*/
-    
-    
-      @Override
-    public void update(Observable o, Object arg) {
-        System.out.println("Update...");
-        if (arg instanceof String) {
-            output.println((String) arg);
-            output.flush();
-            System.out.println("Sending " + arg);
-        }
-    }
+
     public static void handleInput(String inp, Observable o, PrintWriter output, Connection c) {
 
         //intstance of the server
         Server theServer = (Server) c.o;
         String response = "";
 
+        String functionailityMenu = getFunctionailityMenu();
+        //all games 
+        //attach a list of games and menu to output also
+        String allGames = theServer.getListOfGames();
+
         //split the choice up into a character array
         //last element of array will always be the username
         //[B , 100 , GAME , username] OR [O , 100 , GAME , username]
         String[] choices = inp.split(" ");
 
-        
         switch (choices[0].trim()) {
             //User wishes to login
             case "loggedin":
@@ -119,10 +110,8 @@ public class Connection extends Thread implements Observer {
 
                 String allGamesDisplayString = "Here is a list of all the games " + "\n";
 
-                String allGames = theServer.getListOfGames();
                 allGamesDisplayString += allGames;
-                allGamesDisplayString += "\n" + "Enter 'B (price) (gamename) to make a bid on the game"
-                        + "\n" + "Enter 'O (price) (gamename) to make a offer on the game";
+                allGamesDisplayString += functionailityMenu;
 
                 output.println((String) allGamesDisplayString);
                 output.flush();
@@ -146,6 +135,8 @@ public class Connection extends Thread implements Observer {
                     response = "You have made an offer of " + offerPrice + " for the game name " + gameName;
                 }
 
+                response += "\n" + allGames;
+                response += functionailityMenu;
                 output.println((String) response);
 
                 //also need to send out the list of games again and maybe functionailty ? 
@@ -174,6 +165,8 @@ public class Connection extends Thread implements Observer {
                     response = "You have made a bid of " + bidPrice + " for the game " + gameNameBid;
                 }
 
+                response += "\n" + allGames;
+                response += functionailityMenu;
                 //output message to client
                 output.println((String) response);
                 output.flush();
@@ -188,6 +181,19 @@ public class Connection extends Thread implements Observer {
 
     public static void displayMessage(String inp) {
         //gets rendered on the server side each time
+    }
+
+    public static String getFunctionailityMenu() {
+        return "\n"
+                + "********* MENU OPTIONS *********" + "\n"
+                + "Enter 'B (price) (gamename) to make a bid on the game"
+                + "\n" + "Enter 'O (price) (gamename) to make a offer on the game"
+                + "\n" + "--- If you already have a current bid or offer --- "
+                + "\n" + "Enter 'O (price) (gamename) to change offer price "
+                + "\n" + "Enter 'B (price) (gamename) to change bid price "
+                + "\n" + "Enter 'B 0  (gamename) to cancle bid  "
+                + "\n" + "Enter 'O  0  (gamename) to cancle offer  "
+                +"\n" + "***********************************";
     }
 
 }

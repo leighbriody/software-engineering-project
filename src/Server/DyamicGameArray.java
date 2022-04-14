@@ -134,8 +134,28 @@ public class DyamicGameArray {
         return output;
     }
 
-    void bidOnGame(int bidPrice, String gameName, String userEmail, Server theServer) {
+    public boolean  hasUserAlreadyBidded(String gameName , String username){
         for (Game g : array) {
+            if (g.getGameName().equalsIgnoreCase(gameName)) {
+                //pass instance of the server so we can call update if best bid chanegs
+                return g.hasUserAlreadyBidded(username);
+            }
+        }
+        return true;
+    }
+    
+     public boolean  hasUserAlreadyOffered(String gameName , String username){
+        for (Game g : array) {
+            if (g.getGameName().equalsIgnoreCase(gameName)) {
+                //pass instance of the server so we can call update if best bid chanegs
+                return g.hasUserAlreadyOffered(username);
+            }
+        }
+        
+        return true;
+    }
+    void bidOnGame(int bidPrice, String gameName, String userEmail, Server theServer) {
+         for (Game g : array) {
 
             if (g.getGameName().equalsIgnoreCase(gameName)) {
                 //pass instance of the server so we can call update if best bid chanegs

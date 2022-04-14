@@ -23,7 +23,7 @@ public class DynamicBidsArray2 {
 
     // default constructor to initialize the array and values
     public DynamicBidsArray2() {
-        array = new Bid[4];
+        array = new Bid[2];
         size = 0;
         capacity = 2;
         populateNullValues();
@@ -51,6 +51,22 @@ public class DynamicBidsArray2 {
         //anytime we add we need to sort
         populateNullValues();
         sortArray();
+    }
+
+    public boolean hasUserBiddedOnGame(String username) {
+        boolean hasUserBidded = false;
+
+        for (Bid b : array) {
+            try {
+                if (b.getUsername().equalsIgnoreCase(username)) {
+                    hasUserBidded = true;
+                }
+            } catch (Exception e) {
+                //do nothing 
+            }
+        }
+
+        return hasUserBidded;
     }
 
     public void changeUsersBid(Bid element) {
@@ -84,23 +100,21 @@ public class DynamicBidsArray2 {
 
         return flag;
     }
-    
-    public int getCurrentBestBid(){
+
+    public int getCurrentBestBid() {
         return array[0].getPrice();
     }
 
-    
-    public void populateNullValues(){
-       
+    public void populateNullValues() {
 
-        for(int i = 0; i< array.length ; i ++){
-           if(array[i] == null){
-               array[i] = new Bid(0 , "undefined");
-           }
+        for (int i = 0; i < array.length; i++) {
+            if (array[i] == null) {
+                array[i] = new Bid(0, "undefined");
+            }
         }
-        
-   
+
     }
+
     public ArrayList<Integer> getAllBidValues() {
 
         ArrayList<Integer> bids = new ArrayList<>();
@@ -145,14 +159,13 @@ public class DynamicBidsArray2 {
         for (int i = 0; i < array.length; i++) {
             try {
                 if (array[i].getUsername().equalsIgnoreCase(userEmail)) {
-                    this.remove(i);
+                    array[i] = new Bid(0 , "undefined");
                 }
             } catch (Exception e) {
                 //ignore
             }
         }
 
-     
     }
 
     // to remove an element at a particular index
@@ -186,8 +199,8 @@ public class DynamicBidsArray2 {
         }
         array = temp;
         capacity = capacity * minCapacity;
-        
-         populateNullValues();
+
+        populateNullValues();
     }
 
     /*
