@@ -23,6 +23,10 @@ public class DyamicGameArray {
         capacity = 2;
     }
 
+    /***
+     * Adds a game to the game array
+     * @param newGame 
+     */
     public void addGame(Game newGame) {
         // double the capacity if all the allocated space is utilized
         if (size == capacity) {
@@ -32,7 +36,12 @@ public class DyamicGameArray {
         size++;
     }
 
-    // to add an element at a particular index
+    
+    /***
+     * Adds a game to the array given an index
+     * @param index
+     * @param element 
+     */
     public void addElement(int index, Game element) {
         // double the capacity if all the allocated space is utilized
         if (size == capacity) {
@@ -47,12 +56,21 @@ public class DyamicGameArray {
         size++;
     }
 
-    // to get an element at an index
+    
+    /***
+     *  to get an element at an index
+     * @param index
+     * @return 
+     */
     public Game getElement(int index) {
         return array[index];
     }
 
-    // to remove an element at a particular index
+    
+    /***
+     * to remove an element at a particular index
+     * @param index 
+     */
     public void remove(int index) {
         if (index >= size || index < 0) {
             System.out.println("No element at this index");
@@ -65,8 +83,12 @@ public class DyamicGameArray {
         }
     }
 
-    /* method to increase the capacity, if necessary, to ensure it can hold at least the 
+   
+
+    /****
+     *  /* method to increase the capacity, if necessary, to ensure it can hold at least the 
     *  number of elements specified by minimum capacity arguement
+     * @param minCapacity 
      */
     public void ensureCapacity(int minCapacity) {
         Game temp[] = new Game[capacity * minCapacity];
@@ -83,8 +105,9 @@ public class DyamicGameArray {
         capacity = capacity * minCapacity;
     }
 
-    /*
-    *  Trim the capacity of dynamic array to the current size. i.e. remove unused space
+    
+    /***
+     *  Trim the capacity of dynamic array to the current size. i.e. remove unused space
      */
     public void trimToSize() {
         System.out.println("Trimming the array");
@@ -97,17 +120,28 @@ public class DyamicGameArray {
 
     }
 
-    // to get the current size
+    
+    /***
+     *  to get the current size
+     * @return 
+     */
     public int size() {
         return size;
     }
 
-    // to get the current capacity
+    
+    /***
+     * to get the current capacity
+     * @return 
+     */
     public int capacity() {
         return capacity;
     }
 
-    // method to print elements in array
+   
+    /***
+     *  method to print elements in array
+     */
     public void printElements() {
         for (Game b : array) {
             try {
@@ -119,8 +153,12 @@ public class DyamicGameArray {
         }
     }
 
+    
+    /***
+     * returns all the games in the array as a string
+     * @return 
+     */
     public String getAllGamesAsString() {
-
         String output = "";
         for (Game g : array) {
             try {
@@ -128,13 +166,17 @@ public class DyamicGameArray {
             } catch (Exception e) {
 
             }
-
         }
-
         return output;
     }
 
-    public boolean  hasUserAlreadyBidded(String gameName , String username){
+    /**
+     * Checks if a user has already bidded on the game  returns true if so
+     * @param gameName
+     * @param username
+     * @return 
+     */
+    public boolean hasUserAlreadyBidded(String gameName, String username) {
         for (Game g : array) {
             if (g.getGameName().equalsIgnoreCase(gameName)) {
                 //pass instance of the server so we can call update if best bid chanegs
@@ -143,19 +185,33 @@ public class DyamicGameArray {
         }
         return true;
     }
-    
-     public boolean  hasUserAlreadyOffered(String gameName , String username){
+
+    /***
+     * Checks if a user has already offered on a game , returns true if so
+     * @param gameName
+     * @param username
+     * @return 
+     */
+    public boolean hasUserAlreadyOffered(String gameName, String username) {
         for (Game g : array) {
             if (g.getGameName().equalsIgnoreCase(gameName)) {
                 //pass instance of the server so we can call update if best bid chanegs
                 return g.hasUserAlreadyOffered(username);
             }
         }
-        
+
         return true;
     }
+
+    /***
+     * Allows a user to bid on a game
+     * @param bidPrice
+     * @param gameName
+     * @param userEmail
+     * @param theServer 
+     */
     void bidOnGame(int bidPrice, String gameName, String userEmail, Server theServer) {
-         for (Game g : array) {
+        for (Game g : array) {
 
             if (g.getGameName().equalsIgnoreCase(gameName)) {
                 //pass instance of the server so we can call update if best bid chanegs
@@ -165,6 +221,11 @@ public class DyamicGameArray {
         }
     }
 
+    /***
+     * Gets the best offer for game
+     * @param gameName
+     * @return 
+     */
     public int getGamesBestOffer(String gameName) {
         int bestOffer = -1;
         for (Game g : array) {
@@ -175,18 +236,27 @@ public class DyamicGameArray {
         return bestOffer;
     }
 
+    /***
+     * Makes offerr for game
+     * @param offerPrice
+     * @param gameName
+     * @param userEmail
+     * @param theServer 
+     */
     void makeOfferForGame(int offerPrice, String gameName, String userEmail, Server theServer) {
         for (Game g : array) {
-
             if (g.getGameName().equalsIgnoreCase(gameName)) {
                 //pass instance of the server so we can call update if best bid chanegs
                 g.makeOffer(offerPrice, userEmail, theServer);
             }
-
         }
-
     }
 
+    /**
+     * Returns the game order book  as a string
+     * @param gameName
+     * @return 
+     */
     public String getGamesOrderBook(String gameName) {
         for (Game g : array) {
             if (g.getGameName().trim().equalsIgnoreCase(gameName)) {
@@ -197,6 +267,11 @@ public class DyamicGameArray {
         return "order book not found";
     }
 
+    /***
+     * Cancles a users bid
+     * @param gameName
+     * @param userEmail 
+     */
     public void cancleUsersBid(String gameName, String userEmail) {
         for (Game g : array) {
             if (g.getGameName().equalsIgnoreCase(gameName)) {
@@ -206,6 +281,11 @@ public class DyamicGameArray {
         }
     }
 
+    /***
+     * Cancles a users offer
+     * @param gameName
+     * @param userEmail 
+     */
     public void cancleUsersOffer(String gameName, String userEmail) {
         for (Game g : array) {
             if (g.getGameName().equalsIgnoreCase(gameName)) {
@@ -215,6 +295,11 @@ public class DyamicGameArray {
         }
     }
 
+    /**
+     * Returns the game object at the index
+     * @param index
+     * @return 
+     */
     public Game getItem(int index) {
         return array[index];
     }

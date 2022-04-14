@@ -13,6 +13,7 @@ import java.util.Scanner;
  */
 public class Response extends Thread {
 
+    //fields
     private Scanner input;
     private volatile boolean stop = false;
     private static String username;
@@ -37,6 +38,13 @@ public class Response extends Thread {
         stop = true;
     }
 
+    /**
+     * *
+     * This will handle the response we get back from the server //Based on if
+     * it is the current user who bought or sold we can display that to them
+     *
+     * @param response
+     */
     public static void handleResponse(String response) {
 
         //If response contains sucessfully bought and their username we can display ot to them as they are the user
@@ -53,6 +61,7 @@ public class Response extends Thread {
                 System.out.println(response);
             }
         } else {
+            //otherwise thy can see the message
             System.out.println(response);
         }
 

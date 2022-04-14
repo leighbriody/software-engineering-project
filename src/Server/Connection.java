@@ -58,7 +58,6 @@ public class Connection extends Thread implements Observer {
                 //pass input and output to handle input method which deals with logic
                 handleInput(inp, this.o, this.output, this);
 
-                //  o.notifyObservers(inp);
             }
             //remove observer when user wants to exit and enters "."
             o.deleteObserver(this);
@@ -79,15 +78,29 @@ public class Connection extends Thread implements Observer {
         }
     }
 
+    
+    /***
+     * This method will recieve the inpit from the client and determine the neccessary logic or funationality 
+     *  that we need on the server side and send a response back
+     * @param inp
+     * @param o
+     * @param output
+     * @param c 
+     */
     public static void handleInput(String inp, Observable o, PrintWriter output, Connection c) {
 
         //intstance of the server
+        
+        //could use the singleton pattern here to ensure it is only created once 
         Server theServer = (Server) c.o;
+        
+   
         String response = "";
 
+        //get the functionaility menu and store as a string for ease of use
         String functionailityMenu = getFunctionailityMenu();
-        //all games 
-        //attach a list of games and menu to output also
+
+        //get all games on the server and store as a string for ease of use
         String allGames = theServer.getListOfGames();
 
         //split the choice up into a character array
@@ -95,30 +108,28 @@ public class Connection extends Thread implements Observer {
         //[B , 100 , GAME , username] OR [O , 100 , GAME , username]
         String[] choices = inp.split(" ");
 
+        //determine based on the first string of the sentence what functionailty the user wants
         switch (choices[0].trim()) {
             //User wishes to login
             case "loggedin":
-                output.println((String) "Hello and welcome to leighs video game store"
-                        + "\n" + "-----------------"
-                        + "\n" + "Below are your options of functionaility"
-                        + "\n" + "1) Enter 'listgames' to view all the games we have" + "");
-
+                output.println((String) loginMenuString());
                 output.flush();
                 break;
             //User wishes to see the list of games
             case "listgames":
-
                 String allGamesDisplayString = "Here is a list of all the games " + "\n";
 
+                //format the string
                 allGamesDisplayString += allGames;
                 allGamesDisplayString += functionailityMenu;
 
+                //send to client
                 output.println((String) allGamesDisplayString);
                 output.flush();
                 break;
-            //User wishes to make an order
+            //User wishes to make an offer
             case "O":
-                //bid details
+                //offer details
                 int offerPrice = Integer.parseInt(choices[1].trim());
                 String gameName = choices[2].trim();
                 String userEmail = choices[choices.length - 1];
@@ -135,6 +146,7 @@ public class Connection extends Thread implements Observer {
                     response = "You have made an offer of " + offerPrice + " for the game name " + gameName;
                 }
 
+                //Want to attatch all games and a menu with the response so they can see other options
                 response += "\n" + allGames;
                 response += functionailityMenu;
                 output.println((String) response);
@@ -165,6 +177,7 @@ public class Connection extends Thread implements Observer {
                     response = "You have made a bid of " + bidPrice + " for the game " + gameNameBid;
                 }
 
+                //want to atatch all games and menu to response for client
                 response += "\n" + allGames;
                 response += functionailityMenu;
                 //output message to client
@@ -179,10 +192,24 @@ public class Connection extends Thread implements Observer {
 
     }
 
-    public static void displayMessage(String inp) {
-        //gets rendered on the server side each time
+    
+    /***
+     * returns the login menu as a string
+     * @return 
+     */
+    public static String loginMenuString() {
+        return "Hello and welcome to leighs video game store"
+                + "\n" + "-----------------"
+                + "\n" + "Below are your options of functionaility"
+                + "\n" + "1) Enter 'listgames' to view all the games we have" + "";
+
     }
 
+    
+    /***
+     * returns functionaility menu available to the user as a string
+     * @return 
+     */
     public static String getFunctionailityMenu() {
         return "\n"
                 + "********* MENU OPTIONS *********" + "\n"
@@ -193,7 +220,7 @@ public class Connection extends Thread implements Observer {
                 + "\n" + "Enter 'B (price) (gamename) to change bid price "
                 + "\n" + "Enter 'B 0  (gamename) to cancle bid  "
                 + "\n" + "Enter 'O  0  (gamename) to cancle offer  "
-                +"\n" + "***********************************";
+                + "\n" + "***********************************";
     }
 
 }

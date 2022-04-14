@@ -15,12 +15,12 @@ public class Bid {
     private int price;
     private String username;
 
-    
     public Bid(int price, String username) {
         this.price = price;
         this.username = username;
     }
 
+    //default
     Bid() {
         this.price = 0;
         this.username = "";

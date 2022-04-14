@@ -40,14 +40,30 @@ public class Game {
         return gameName;
     }
 
+    /**
+     * Checks if a user has offered
+     * @param username
+     * @return 
+     */
     public boolean hasUserAlreadyOffered(String username) {
         return this.orderBook.hasUserAlreadyOffered(username);
     }
-
+    
+    /***
+     * Check if a user has bidded
+     * @param username
+     * @return 
+     */
     public boolean hasUserAlreadyBidded(String username) {
         return this.orderBook.hasUserAlreadyBidded(username);
     }
 
+    /***
+     * Makes a bid on a game
+     * @param bidPrice
+     * @param userEmail
+     * @param theServer 
+     */
     public void makeBid(int bidPrice, String userEmail, Server theServer) {
 
         //each time someone makes a bid or an offer we need to check if the best bid is the same or greater than the offer ? 
@@ -78,6 +94,12 @@ public class Game {
         }
     }
 
+    /***
+     * Makes an offer on a game
+     * @param offerPrice
+     * @param userEmail
+     * @param theServer 
+     */
     public void makeOffer(int offerPrice, String userEmail, Server theServer) {
         //each time someone makes a bid or an offer we need to check if the best bid is the same or greater than the offer ?  
         if (this.bestOffer > offerPrice || this.bestOffer == -1) {
@@ -95,6 +117,11 @@ public class Game {
         }
     }
 
+
+    /**
+     * Checks to see if best bid matches best offer and if a trade is available
+     * @return 
+     */
     public boolean isTradeViable() {
         //take the best bid
         if (bestBid >= bestOffer && bestOffer != -1) {
@@ -104,16 +131,29 @@ public class Game {
         }
     }
 
+    /***
+     * Cancles users bid
+     * @param userEmail 
+     */
     public void cancleUsersBid(String userEmail) {
         //need to remove the bid from the array
         this.orderBook.cancleUsersBid(userEmail);
     }
 
+    /***
+     * Cancle uses offer
+     * @param userEmail 
+     */
     public void cancleUsersOffer(String userEmail) {
         //need to remove the bid from the array
         this.orderBook.cancleUsersOffer(userEmail);
     }
 
+    /***
+     * Returns the order book as a nicely formatted string table
+     * @param gameName
+     * @return 
+     */
     public String displayOrderBook(String gameName) {
 
         return this.orderBook.displayOrderBook(gameName);

@@ -5,58 +5,298 @@
  */
 package Server;
 
+
+import java.util.ArrayList;
+import java.util.Arrays;
+
 /**
  *
  * @author Leigh Briody
  */
 public class DynamicBidsArray {
 
-    private Bid[] bids;
-    private int numItems;
+    private Bid array[];
+    // holds the current size of array
+    private int size;
+    // holds the total capacity of array
+    private int capacity;
 
+    // default constructor to initialize the array and values
     public DynamicBidsArray() {
-
-        //default start at 10
-        bids = new Bid[10];
-        numItems = 0;
-        
-        //init
-        
-
+        array = new Bid[2];
+        size = 0;
+        capacity = 2;
+        populateNullValues();
     }
 
-    public void addBid(Bid newBid) {
+    //
+    /***
+     *  to add an element at the end
+     * @param element 
+     */
+    public void addElement(Bid element) {
 
-        if (numItems == bids.length) {
-            growArray();
+        String username = element.getUsername();
+
+        // double the capacity if all the allocated space is utilized
+        if (size == capacity) {
+            ensureCapacity(2);
         }
-        bids[numItems] = newBid;
-        numItems++;
+
+        //want to check if they currently have a bid
+        if (hasUserAlreadyBidded(username)) {
+            changeUsersBid(element);
+        } else {
+
+            array[size] = element;
+            size++;
+        }
+
+        //anytime we add we need to sort
+        populateNullValues();
+        sortArray();
     }
 
-    public void removeItem() {
-        numItems--; // might first 0 out of element if security is a concert
+    /***
+     * Checks to see if user has bidded
+     * @param username
+     * @return 
+     */
+    public boolean hasUserBiddedOnGame(String username) {
+        boolean hasUserBidded = false;
+
+        for (Bid b : array) {
+            try {
+                if (b.getUsername().equalsIgnoreCase(username)) {
+                    hasUserBidded = true;
+                }
+            } catch (Exception e) {
+                //do nothing 
+            }
+        }
+
+        return hasUserBidded;
     }
 
-    public Bid getItem(int index) {
-        return bids[index];
+    /***
+     * Changes a users bid
+     * @param element 
+     */
+    public void changeUsersBid(Bid element) {
+        //find bid and change it
+        String username = element.getUsername();
+        int bidPrice = element.getPrice();
+
+        for (Bid b : array) {
+            try {
+                if (b.getUsername().equalsIgnoreCase(username)) {
+                    b.setPrice(bidPrice);
+                }
+            } catch (Exception e) {
+                //ignore
+            }
+        }
     }
 
-    public void growArray() {
-        Bid[] tempArr = new Bid[bids.length * 2];
-        for (int i = 0; i < numItems; i++) {
-            if (bids[i] == null) {
-                tempArr[i] = new Bid(20, "leigh@gmail.com");
-            } else {
-                tempArr[i] = bids[i];
+    /***
+     * Checks to see if user has already bided
+     * @param username
+     * @return 
+     */
+    public boolean hasUserAlreadyBidded(String username) {
+        boolean flag = false;
+
+        for (Bid b : array) {
+            try {
+                if (b.getUsername().equalsIgnoreCase(username)) {
+                    flag = true;
+                }
+            } catch (Exception e) {
+                //ignore 
+            }
+        }
+
+        return flag;
+    }
+
+    /***
+     * Gets current best bid
+     * @return 
+     */
+    public int getCurrentBestBid() {
+        return array[0].getPrice();
+    }
+
+    /***
+     * Pupulates all null values of the array with a null default object ,
+     * this is to prevent any errors when merge sort 
+     */
+    public void populateNullValues() {
+
+        for (int i = 0; i < array.length; i++) {
+            if (array[i] == null) {
+                array[i] = new Bid(0, "undefined");
+            }
+        }
+
+    }
+    /***
+     * Gets all the bid values
+     * @return 
+     */
+    public ArrayList<Integer> getAllBidValues() {
+
+        ArrayList<Integer> bids = new ArrayList<>();
+        for (Bid b : array) {
+            try {
+                //only if != 0 as the 0 values are placeholders for dynamic array
+                if (b.getPrice() != 0) {
+                    bids.add(b.getPrice());
+                }
+
+            } catch (Exception e) {
+
             }
 
-            bids = tempArr;
+        }
+
+        return bids;
+    }
+
+    
+    /***
+     * to add an element at a particular index
+     * @param index
+     * @param element 
+     */
+    public void addElement(int index, Bid element) {
+        // double the capacity if all the allocated space is utilized
+        if (size == capacity) {
+            ensureCapacity(2);
+        }
+        // shift all elements from the given index to right
+        for (int i = size - 1; i >= index; i--) {
+            array[i + 1] = array[i];
+        }
+        // insert the element at the specified index
+        array[index] = element;
+        size++;
+    }
+
+    
+    /***
+     * to get an element at an index
+     * @param index
+     * @return 
+     */
+    public Bid getElement(int index) {
+        return array[index];
+    }
+
+    /***
+     * Cancles a users bid
+     * @param userEmail 
+     */
+    public void cancleUserBid(String userEmail) {
+
+        for (int i = 0; i < array.length; i++) {
+            try {
+                if (array[i].getUsername().equalsIgnoreCase(userEmail)) {
+                    array[i] = new Bid(0 , "undefined");
+                }
+            } catch (Exception e) {
+                //ignore
+            }
+        }
+
+    }
+
+    
+    /***
+     *  to remove an element at a particular index
+     * @param index 
+     */
+    public void remove(int index) {
+        if (index >= size || index < 0) {
+            System.out.println("No element at this index");
+        } else {
+            for (int i = index; i < size - 1; i++) {
+                array[i] = array[i + 1];
+            }
+            array[size - 1] = null;
+            size--;
+        }
+
+        //sortArray(); needed ? 
+    }
+
+    
+ 
+    /***
+     * method to increase the capacity, if necessary, to ensure it can hold at least the 
+    *  number of elements specified by minimum capacity arguement
+     * @param minCapacity 
+     */
+    public void ensureCapacity(int minCapacity) {
+        Bid temp[] = new Bid[capacity * minCapacity];
+
+        //init temp array to prevent errors
+        for (int i = 0; i < temp.length; i++) {
+            temp[i] = new Bid(0, "undefined");
+        }
+
+        for (int i = 0; i < capacity; i++) {
+            temp[i] = array[i];
+        }
+        array = temp;
+        capacity = capacity * minCapacity;
+
+        populateNullValues();
+    }
+
+    /*
+    *  /Trim the capacity of dynamic array to the current size. i.e. remove unused space
+     */
+    public void trimToSize() {
+        System.out.println("Trimming the array");
+        Bid temp[] = new Bid[size];
+        for (int i = 0; i < size; i++) {
+            temp[i] = array[i];
+        }
+        array = temp;
+        capacity = array.length;
+
+    }
+
+    // to get the current size
+    public int size() {
+        return size;
+    }
+
+    // to get the current capacity
+    public int capacity() {
+        return capacity;
+    }
+
+    // method to print elements in array
+    public void printElements() {
+        for (Bid b : array) {
+            try {
+                System.out.println(b.toString());
+            } catch (Exception e) {
+                //null
+            }
+
         }
     }
 
+    //Methods to sort the array
+    public void sortArray() {
+        this.mergeSort(array, array.length);
+    }
     //will put merge sort
-    public  void mergeSort(Bid[] a, int n) {
+
+    public void mergeSort(Bid[] a, int n) {
         if (n < 2) {
             return;
         }
@@ -81,7 +321,7 @@ public class DynamicBidsArray {
 
         int i = 0, j = 0, k = 0;
         while (i < left && j < right) {
-            if (l[i].getPrice() <= r[j].getPrice()) {
+            if (l[i].getPrice() >= r[j].getPrice()) {
                 a[k++] = l[i++];
             } else {
                 a[k++] = r[j++];
@@ -92,67 +332,6 @@ public class DynamicBidsArray {
         }
         while (j < right) {
             a[k++] = r[j++];
-        }
-    }
-
-    //sort bids 
-    //will sort 
-    // A utility function to swap two elements
-    static void swap(Bid[] arr, int i, int j) {
-        Bid temp = arr[i];
-        arr[i] = arr[j];
-        arr[j] = temp;
-    }
-
-    public void sortArray() {
-       this.mergeSort(bids, bids.length);
-    }
-
-    static int partition(Bid[] arr, int low, int high) {
-
-        int pivot = arr[high].getPrice();
-
-        // Index of smaller element and
-        // indicates the right position
-        // of pivot found so far
-        int i = (low - 1);
-
-        for (int j = low; j <= high - 1; j++) {
-
-            // If current element is smaller
-            // than the pivot
-            if (arr[j].getPrice() < pivot) {
-
-                // Increment index of
-                // smaller element
-                i++;
-                swap(arr, i, j);
-            }
-        }
-        swap(arr, i + 1, high);
-        return (i + 1);
-    }
-
-    public void quickSort(Bid[] arr, int low, int high) {
-        if (low < high) {
-
-            // pi is partitioning index, arr[p]
-            // is now at right place
-            int pi = partition(arr, low, high);
-
-            // Separately sort elements before
-            // partition and after partition
-            quickSort(arr, low, pi - 1);
-            quickSort(arr, pi + 1, high);
-        }
-    }
-
-    public void displayArr() {
-        for (Bid b : bids) {
-            if (b != null) {
-                System.out.println(b.toString());
-            }
-
         }
     }
 }

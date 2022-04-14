@@ -28,6 +28,7 @@ public class Client {
         new Client();
     }
 
+    
     public Client() {
         try {
 
@@ -58,7 +59,7 @@ public class Client {
             }
 
             //get response and start thread so we can keep listening
-            Response resp = new Response(input,this.userEmail);
+            Response resp = new Response(input, this.userEmail);
             resp.start();
 
             while (!message.equals(".")) {
