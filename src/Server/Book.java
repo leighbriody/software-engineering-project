@@ -18,8 +18,7 @@ import java.util.Set;
  */
 public class Book {
 
-    //lock object 
-    private Object lock = new Object();
+
 
     //Hold all bids and offers within a dynamic array
     private DynamicBidsArray mapBids;
@@ -44,7 +43,7 @@ public class Book {
     public void makeTrade(String gameName, Server theServer, int bestBid, int bestOffer) {
 
         //important that we synchronise this process with a lock as we dont want trades to get miss matched
-        synchronized (lock) {
+   
             // System.out.println(this.mapOffers);
             Bid bidderMatched = this.mapBids.getElement(0);
             Offer offerMatched = this.mapOffers.getElement(this.mapOffers.getBestOfferIndex());  //notify them
@@ -65,7 +64,7 @@ public class Book {
 
             //send a message to all observers making them aware of the trade that was made
             theServer.notifyObservers(gameName + " has been traded for a buy price of €" + bestBid + " and a sell price of " + bestOffer);
-        }
+    
 
     }
 

@@ -6,6 +6,7 @@
 package Command;
 
 import Server.Connection;
+import static Server.Connection.loginMenuString;
 import Server.Server;
 import java.io.PrintWriter;
 
@@ -13,8 +14,12 @@ import java.io.PrintWriter;
  *
  * @author Leigh Briody
  */
-public interface Command {
-    
+public class LoggedInCommand implements Command{
 
-    public void doAction(String input ,Server theServer , PrintWriter output, Connection c);
+    @Override
+    public void doAction(String input, Server theServer, PrintWriter output, Connection c) {
+          output.println((String) loginMenuString());
+                output.flush();
+    }
+    
 }

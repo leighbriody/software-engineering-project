@@ -5,10 +5,20 @@
  */
 package Command;
 
+import Server.Connection;
+import Server.Server;
+import java.io.PrintWriter;
+
 /**
  *
  * @author Leigh Briody
  */
-public class NoActionSuppliedCommand {
-    
+public class NoActionSuppliedCommand implements Command {
+
+    @Override
+    public void doAction(String input, Server theServer, PrintWriter output, Connection c) {
+        output.print("not an option , try again");
+        
+    }
+
 }

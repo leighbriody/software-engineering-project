@@ -23,6 +23,8 @@ public class Client {
     private boolean loggedIn = false;
     private String userEmail = "";
 
+   
+    
     public static void main(String[] args) {
         //create new instance of client
         new Client();

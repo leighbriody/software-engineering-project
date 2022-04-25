@@ -20,8 +20,6 @@ public class Server extends Observable {
 
     //Hold all games within the server on a dynamic array
     private static DyamicGameArray games = new DyamicGameArray();
-
-    //create a lock object 
     private Object lock = new Object();
 
     public static void main(String[] args) {
@@ -29,6 +27,8 @@ public class Server extends Observable {
         //add 2 games to the server (add more in the future)
         games.addGame(new Game("fifa"));
         games.addGame(new Game("call-of-duty"));
+        games.addGame(new Game("forza"));
+        games.addGame(new Game("sonic"));
 
         //create instance of the server
         new Server();
@@ -77,9 +77,9 @@ public class Server extends Observable {
     public void bidOnGame(int bidPrice, String gameName, String userEmail) {
 
         synchronized (lock) {
-            if (!games.hasUserAlreadyOffered(gameName, userEmail)) {
-                games.bidOnGame(bidPrice, gameName, userEmail, this);
-            }
+
+            games.bidOnGame(bidPrice, gameName, userEmail, this);
+
         }
 
     }
@@ -88,26 +88,24 @@ public class Server extends Observable {
     public void makeOfferForGame(int offerPrice, String gameName, String userEmail) {
 
         synchronized (lock) {
-            if (!games.hasUserAlreadyBidded(gameName, userEmail)) {
-                games.makeOfferForGame(offerPrice, gameName, userEmail, this);
-            }
+
+            games.makeOfferForGame(offerPrice, gameName, userEmail, this);
+
         }
 
     }
 
     //Gets a games order book as a string
     public String getGamesOrderBook(String gameName) {
-        synchronized (lock) {
-            return games.getGamesOrderBook(gameName);
-        }
+
+        return games.getGamesOrderBook(gameName);
 
     }
 
     //Allows a user to cancle their bid 
     public void cancleUsersBid(String gameName, String userEmail) {
-        synchronized (lock) {
-            games.cancleUsersBid(gameName, userEmail);
-        }
+
+        games.cancleUsersBid(gameName, userEmail);
 
     }
 

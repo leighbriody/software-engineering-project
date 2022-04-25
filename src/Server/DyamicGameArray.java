@@ -212,7 +212,6 @@ public class DyamicGameArray {
      */
     void bidOnGame(int bidPrice, String gameName, String userEmail, Server theServer) {
         for (Game g : array) {
-
             if (g.getGameName().equalsIgnoreCase(gameName)) {
                 //pass instance of the server so we can call update if best bid chanegs
                 g.makeBid(bidPrice, userEmail, theServer);

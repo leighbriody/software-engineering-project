@@ -5,35 +5,38 @@
  */
 package Command;
 
+import Server.Connection;
+import Server.Server;
+
 /**
  *
  * @author Leigh Briody
  */
 public class CommandFactory {
-     public static Command createCommand(String action) {
-        Command c;
-        if(action == null){
-             action = "";
+     public static Command createCommand(String decision) {
+        Command c = null;
+        if(decision == null){
+             decision = "";
         }
-        
-        switch (action) {
-            case "login":
-                
+         
+        switch (decision) {
+            case "listgames":
+                 c = new ListGamesCommand();
                 break;
-            case "register":
-           
+                 case "loggedin":
+                 c = new LoggedInCommand();
                 break;
-            case "update":
-              
+                 case "O":
+                 c = new MakeOfferCommand();
                 break;
-            case "searchCustomer":
-               
+                 case "o":
+                 c = new MakeOfferCommand();
                 break;
-            case "logout":
-               
+                 case "B":
+                 c = new MakeBidCommand();
                 break;
-            case "delete":
-               
+                 case "b":
+                 c = new MakeBidCommand();
                 break;
             default:
                 c = new NoActionSuppliedCommand();
